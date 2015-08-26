@@ -4,7 +4,7 @@
 
 Two email addresses supported (one for successful problem resolutions, one for those who want more help).
 
-## Technologies used
+## Technologies
 
 Uses:
 
