@@ -14,7 +14,7 @@ Uses:
 * Twig
 * CORS (for cross-domain AJAX)
 
-Built-in test harness @ /mail also uses uses Foundation 5
+Built-in test harness @ /mail uses Foundation 5
 
 ## Config
 
