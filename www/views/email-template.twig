@@ -1,0 +1,55 @@
+{% block subject 'Support Notebook' %}
+
+{% block body_html %}
+<html>
+<head>
+<style>
+
+p
+{
+	font-size: 1.2em;
+	padding-bottom: 0.5em;
+	border-bottom: 1px #999 dotted;
+	line-height: 150%;
+}
+
+span
+{
+	display: block;
+}
+span.step
+{
+	color: red;
+	font-weight: bold;
+}
+span.timestamp
+{
+	color: green;
+}
+span.choice
+{
+	color: blue;
+}
+
+</style>
+</head>
+<body>
+
+<h1>Support Notebook</h1>
+
+<div style="border: 1px #AAA solid; padding: 20px;">
+	{{ notebook|raw }}
+</div>
+
+</body>
+</html>
+{% endblock %}
+
+{% block body_text %}
+
+Support Notebook
+================
+
+{{ notebook|striptags }}
+
+{% endblock %}

@@ -1,0 +1,8 @@
+####################################################################################################
+# Config for Notebook Mailer
+####################################################################################################
+
+email_on_success: "ok@apewave.com"
+email_on_failure: "problem@apewave.com"
+
+cors_allowed_origin: "http://notes.prev1336.dmclub.net"
