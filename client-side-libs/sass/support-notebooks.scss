@@ -1,0 +1,182 @@
+@charset "utf-8";
+
+/****************************************************************************/
+/* SUPPORT NOTEBOOKS CSS                                                    */
+/****************************************************************************/
+
+@import "compass/utilities/general/clearfix";
+@import "sassy-buttons";
+
+.maincol div.sn-step
+{
+	h1, h2, h3
+	{
+		/* Pull out span */
+		span
+		{
+			color: #999591;
+			margin-left: -1.2em;
+			min-width: 1em;
+			margin-right: 0.2em;
+			display: inline-block;
+		}
+		
+		/* Suppress auto-numbering of headings */
+		&:before { content: none; }
+	}
+}
+
+
+/* Forms */
+
+label
+{
+	clear: both;
+	float: left;
+	width: 250px;
+	margin-right: 20px;
+	text-align: right;
+}
+
+form.record
+{
+	@include pie-clearfix;
+	
+	input, div, span
+	{
+		float: left;
+	}
+
+	span + span
+	{
+		clear: left;
+	}
+
+	input[type=text], textarea, div
+	{
+		width: 500px;
+		margin-bottom: 10px;
+	}
+	
+	input[type=text], textarea
+	{
+		padding: 3px 7px;
+		border-color: #999;
+		border-width: 0 0 1px 0;
+		border-style: solid;
+		background-color: #F9F9F9;
+	}
+	
+
+	input[type=radio], input[type=checkbox]
+	{
+		clear: left;
+		margin-right: 10px;
+	}
+
+	input[type=submit]
+	{
+		clear: both;
+		float: left;
+		margin-top: 10px;
+		margin-left: 270px;
+	}
+
+	textarea
+	{
+		height: 100px;
+	}
+
+	select
+	{
+		float: left;
+	}
+}
+
+
+/* Digest */
+
+.digest
+{
+	border: 1px #999 solid;
+	padding: 1em;
+	
+	p
+	{
+		padding-bottom: 0.5em;
+		border-bottom: 1px #999 dotted;
+	}
+
+	span
+	{
+		display: block;
+		&.step
+		{
+			color: red;
+			font-weight: bold;
+		}
+		&.timestamp
+		{
+			color: green;
+		}
+		&.choice
+		{
+			color: blue;
+		}
+	}
+}
+
+h3#sidebar-digest
+{
+	margin-bottom: 0;
+	border-bottom: none;
+
+	a { float: right; font-size: 0.7em; color: #FFF9C0; padding-top: 0.5em; }
+ 
+}
+
+#sidebar
+{
+	.digest
+	{
+		font-size: 0.7em;
+		color: #999;
+		height: 200px;
+		overflow-x: hidden;
+		overflow-y: scroll;
+
+		span
+		{
+			&.step
+			{
+				color: lighten(red, 20%);
+			}
+			&.timestamp
+			{
+				color: lighten(green, 20%);;
+			}
+			&.choice
+			{
+				color: lighten(blue, 20%);;
+			}
+		}
+	}
+}
+
+.greyed-out
+{
+	@include opacity(0.25);
+	background-color: #EEE;
+}
+
+.hidden
+{
+	display: none;
+}
+
+/* Controls */
+a.button
+{
+	@include sassy-button("matte", 5px, 19px, #D25E25, #D25E25, #fff, "false");
+	text-decoration: none;
+}
