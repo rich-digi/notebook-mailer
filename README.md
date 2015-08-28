@@ -1,6 +1,6 @@
 # Unified Solutions Hub
 
-**A webapp that forms the center of the Unified Solutions system. At the moment all it does is allow Support Notesbooks to be emailed to support., but its role will be expanded in future versions**
+**A webapp that forms the center of the Unified Solutions system. At the moment all it does is allow Support Notesbooks to be emailed to support, but its role will be expanded in future versions**
 
 Two email addresses supported (one for successful problem resolutions, one for those who want more help).
 
