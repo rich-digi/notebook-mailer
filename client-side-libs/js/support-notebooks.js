@@ -476,7 +476,7 @@ var MAILNOTEBOOK = function($) {
 		console.log(nb);
 		$.ajax({
 			type: 'POST',
-			url: 'http://notebook-mailer.dmclub.net/mail',
+			url: 'http://ush.dmclub.net/mail',
 			crossDomain: true,
 			data: {'notebook': nb},
 			dataType: 'text',
