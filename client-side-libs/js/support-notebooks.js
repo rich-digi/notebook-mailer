@@ -101,7 +101,9 @@ var SUPPORT_NOTEBOOK = function($) {
 	
 	module.printline = function(line)
 	{
-		var step 		= ['<span class="step">', line.step, '</span>'].join('');
+		console.dir(line);
+		var title 		= [[line.note, line.step].join('-'), line.heading].join(' ');
+		var step 		= ['<a class="step" href="'+line.link+'">', title, '</a>'].join('');
 		var timestamp 	= ['<span class="timestamp">', line.timestamp, '</span>'].join('');
 		var choice 		= ['<span class="choice">', line.choice, '</span>'].join('');
 		var formvalarr = [];
@@ -137,7 +139,9 @@ var SUPPORT_NOTEBOOK = function($) {
 	
 	module.record = function()
 	{
-		var step = [my.page, $(this).prevAll('h2, h1').text()].join('-');
+		var link = document.location.pathname + document.location.hash;
+		var step = $(this).prevAll('h2, h1').find('span').text();
+		var heading = $(this).prevAll('h2, h1').text().replace(step, '').trim();
 		var t = new Date;
 		var timestamp = t.toUTCString();
 		var temp = $(this).serializeArray();
@@ -149,7 +153,10 @@ var SUPPORT_NOTEBOOK = function($) {
 		var formvals = obj;
 		var choice = my.submit;
 		var rec = {
+				link		: link,
+				note		: my.page,
 				step		: step,
+				heading		: heading,
 				timestamp	: timestamp,
 				choice		: choice,
 				form		: formvals
@@ -419,12 +426,13 @@ var BACK_BUTTON_BEHAVIOUR = function() {
 		
 		window.onhashchange = function()
 		{
-			// console.log('Inpage', my.inpage);
-			console.log(window.history.length);
+			console.log('HASH CHANGE to ', document.location.hash);
 			if (my.inpage)
 			{
 				// In-page mechanism triggered the hash change
 				module.update_history();
+				var hash = document.location.hash;
+				my.callback(hash);
 			}
 			else
 			{
@@ -447,7 +455,7 @@ var BACK_BUTTON_BEHAVIOUR = function() {
 	
 	module.update_history = function()
 	{
-		my.subpages.push(window.location.hash);
+		my.subpages.push(document.location.hash);
 		console.log(my.subpages);
 	}
 		
