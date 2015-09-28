@@ -1,0 +1,23 @@
+{% extends "master.twig" %}
+
+{% block content %}
+
+{% if sent is defined %}
+<div class="large-12 columns">
+	<div data-alert class="alert-box success radius">
+		Attempt to send mail made.
+		<a href="#" class="close">&times;</a>
+	</div>
+</div>
+{% endif %}
+
+<form name="test" action="/mail" method="post">
+<div class="large-12 columns">
+	<label>Notebook content
+		<textarea name="notebook"></textarea>
+	</label>
+	<input type="submit" class="button" value="Test">
+</div>
+</form>
+
+{% endblock %}

@@ -1,23 +1,29 @@
-# Unified Solutions Hub
+# Foundation Compass Template
 
-**A webapp that forms the center of the Unified Solutions system. At the moment all it does is allow Support Notebooks to be emailed to support, but its role will be expanded in future versions**
+The easiest way to get started with Foundation + Compass.
 
-Two email addresses supported (one for successful problem resolutions, one for those who want more help).
+## Requirements
 
-## Technologies
+  * Ruby 1.9+
+  * [Node.js](http://nodejs.org)
+  * [compass](http://compass-style.org/): `gem install compass`
+  * [bower](http://bower.io): `npm install bower -g`
 
-Uses:
+## Quickstart
 
-* Silex
-* Symphony Components
-* Swift Mailer
-* Twig
-* CORS (for cross-domain AJAX)
+  * [Download this starter compass project and unzip it](https://github.com/zurb/foundation-compass-template/archive/master.zip)
+  * Run `bower install` to install the latest version of Foundation
+  
+Then when you're working on your project, just run the following command:
 
-Built-in test harness @ /mail uses Foundation 5
+```bash
+bundle exec compass watch
+```
 
-## Config
+## Upgrading
 
-See config/prod.yml
+If you'd like to upgrade to a newer version of Foundation down the road just run:
 
-This YAML file allows you to set the recipient emails addresses and acceptable access doamin for CORS.
+```bash
+bower update
+```
