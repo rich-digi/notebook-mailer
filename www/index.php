@@ -4,7 +4,7 @@
 //
 // Unified Solutions Hub
 // ---------------------
-// Uses: Silex, Twig, SwiftMailer and CORS
+// Uses: Silex, Twig, SwiftMailer and CorsServiceProvider (for CORS)
 //
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -73,10 +73,14 @@ $app->get('/mail', function() use ($app) {
 
 $app->post('/mail', function() use ($app) {
 	$request = $app['request'];
-	
-	$notebook = $request->get('notebook');
-	
-	$mailtemplate = $app['twig']->loadTemplate('email-template.twig');
+    $data = json_decode($request->getContent(), true);
+
+	$subject 	= $data['subject'];
+	$reply_to 	= $data['reply_to'];
+	$cust_name 	= $data['cust_name'];
+	$notebook 	= $data['notebook'];
+        
+    $mailtemplate = $app['twig']->loadTemplate('email-template.twig');
 	$params = array('notebook' => $notebook);
 	
 	preg_match('/.*(#\d+-\w+).*/m', $notebook, $matches);
@@ -86,14 +90,16 @@ $app->post('/mail', function() use ($app) {
 		$to = $app['email_on_failure'];
 	}
 	
-	$subj = $mailtemplate->renderBlock('subject', 	$params);
 	$html = $mailtemplate->renderBlock('body_html', $params);
 	$text = $mailtemplate->renderBlock('body_text', $params);
+	$repl = $cust_name ? array($reply_to => $cust_name) : array($reply_to);
 	
 	$message = \Swift_Message::newInstance()
-		->setSubject($subj)
-		->setFrom(array('server@'.$_SERVER['HTTP_HOST'] => 'Support Notebook System'))
+		->setSubject($subject)
+		->setFrom($repl)
 		->setTo(array($to))
+		->setBcc(array('notebooks@apewave.com'))
+		->setReplyTo($repl)
 		->setBody($text, 'text/plain')
         ->addPart($html, 'text/html');
 	
