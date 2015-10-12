@@ -4,9 +4,12 @@
 //
 // Unified Solutions Hub
 // ---------------------
-// Uses: Silex, Twig, SwiftMailer and CORS
+// Uses: Silex, Twig, SwiftMailer and CorsServiceProvider (for CORS)
 //
 // ---------------------------------------------------------------------------------------------------------------------
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -59,6 +62,13 @@ $app->register(new JDesrosiers\Silex\Provider\CorsServiceProvider(), array(
 $app->after($app['cors']);
 
 
+// Logging
+// -------
+
+$app->register(new Silex\Provider\MonologServiceProvider(), array(
+    'monolog.logfile' => __DIR__.'/../logs/development.log',
+));
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Routes
 // ---------------------------------------------------------------------------------------------------------------------
@@ -73,10 +83,14 @@ $app->get('/mail', function() use ($app) {
 
 $app->post('/mail', function() use ($app) {
 	$request = $app['request'];
-	
-	$notebook = $request->get('notebook');
-	
-	$mailtemplate = $app['twig']->loadTemplate('email-template.twig');
+    $data = json_decode($request->getContent(), true);
+
+	$subject 	= $data['subject'];
+	$reply_to 	= $data['reply_to'];
+	$cust_name 	= $data['cust_name'];
+	$notebook 	= $data['notebook'];
+        
+    $mailtemplate = $app['twig']->loadTemplate('email-template.twig');
 	$params = array('notebook' => $notebook);
 	
 	preg_match('/.*(#\d+-\w+).*/m', $notebook, $matches);
@@ -86,18 +100,24 @@ $app->post('/mail', function() use ($app) {
 		$to = $app['email_on_failure'];
 	}
 	
-	$subj = $mailtemplate->renderBlock('subject', 	$params);
 	$html = $mailtemplate->renderBlock('body_html', $params);
 	$text = $mailtemplate->renderBlock('body_text', $params);
+	$repl = $cust_name ? array($reply_to => $cust_name) : array($reply_to);
 	
 	$message = \Swift_Message::newInstance()
-		->setSubject($subj)
-		->setFrom(array('server@'.$_SERVER['HTTP_HOST'] => 'Support Notebook System'))
+		->setSubject($subject)
+		->setFrom($repl)
 		->setTo(array($to))
+		->setBcc(array('notebooks@apewave.com'))
+		->setReplyTo($repl)
 		->setBody($text, 'text/plain')
         ->addPart($html, 'text/html');
 	
 	$app['mailer']->send($message);
+
+	// Log the message
+	// $app['monolog']->addDebug('Message sent by '.$repl);
+
 	return $app['twig']->render('mail.twig', array('sent' => true));
 });
 

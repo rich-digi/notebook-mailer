@@ -1,5 +1,3 @@
-{% block subject 'Support Notebook' %}
-
 {% block body_html %}
 <html>
 <head>
@@ -50,6 +48,6 @@ span.choice
 Support Notebook
 ================
 
-{{ notebook|striptags }}
+{{ notebook|replace({'<br>': "\n", '<span class="choice">': "\n", '</a>': "\n", '</span>': "\n", '</p>': "\n\n"})|striptags }}
 
 {% endblock %}

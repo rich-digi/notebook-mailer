@@ -1,8 +1,8 @@
 @charset "utf-8";
 
-/****************************************************************************/
-/* SUPPORT NOTEBOOKS CSS                                                    */
-/****************************************************************************/
+/****************************************************************************************/
+/* DIAGNOSTIC DIGEST                                                        */
+/****************************************************************************************/
 
 @import "compass/utilities/general/clearfix";
 @import "sassy-buttons";
@@ -17,8 +17,10 @@
 			color: #999591;
 			margin-left: -1.2em;
 			min-width: 1em;
-			margin-right: 0.2em;
+			padding-right: 0.4em;
+			margin-right: 0.4em;
 			display: inline-block;
+			background-color: #FFF;
 		}
 		
 		/* Suppress auto-numbering of headings */
@@ -179,4 +181,38 @@ a.button
 {
 	@include sassy-button("matte", 5px, 19px, #D25E25, #D25E25, #fff, "false");
 	text-decoration: none;
+}
+
+/* Message */
+div#support-notebook-message
+{
+	background-color: #ecffef;
+	border: #05951b 6px solid;
+	@include border-radius(12px);
+	padding: 20px;
+	
+	h2
+	{
+		margin-top: 0.5em;
+		font-weight: bold;
+		color: #05951b;
+		background-color: transparent;
+		border-bottom: none;
+		
+		&::before
+		{
+			content: none;
+		}
+	}
+}
+
+div#support-notebook-message.nb-err
+{
+	background-color: #f6f2f2;
+	border: #7c0c14 6px solid;
+
+	h2
+	{
+		color: #7c0c14;
+	}
 }

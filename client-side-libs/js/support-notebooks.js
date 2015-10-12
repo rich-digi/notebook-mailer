@@ -19,6 +19,18 @@ if (typeof c.assert == u) { c.assert 	= f; }
 if (typeof c.info   == u) { c.info 		= f; }
 if (typeof console  == u) { console 	= c; }
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Modify JQuery to support IE8/9 non-standard implementation of CORS
+// REMOVE WHEN SUPPORTING THESE BROWSERS IN NO LONGER NECESSARY
+
+/*!
+ * jQuery-ajaxTransport-XDomainRequest - v1.0.4 - 2015-03-05
+ * https://github.com/MoonScript/jQuery-ajaxTransport-XDomainRequest
+ * Copyright (c) 2015 Jason Moon (@JSONMOON)
+ * Licensed MIT (/blob/master/LICENSE.txt)
+ */
+(function(a){if(typeof define==='function'&&define.amd){define(['jquery'],a)}else if(typeof exports==='object'){module.exports=a(require('jquery'))}else{a(jQuery)}}(function($){if($.support.cors||!$.ajaxTransport||!window.XDomainRequest){return $}var n=/^(https?:)?\/\//i;var o=/^get|post$/i;var p=new RegExp('^(\/\/|'+location.protocol+')','i');$.ajaxTransport('* text html xml json',function(j,k,l){if(!j.crossDomain||!j.async||!o.test(j.type)||!n.test(j.url)||!p.test(j.url)){return}var m=null;return{send:function(f,g){var h='';var i=(k.dataType||'').toLowerCase();m=new XDomainRequest();if(/^\d+$/.test(k.timeout)){m.timeout=k.timeout}m.ontimeout=function(){g(500,'timeout')};m.onload=function(){var a='Content-Length: '+m.responseText.length+'\r\nContent-Type: '+m.contentType;var b={code:200,message:'success'};var c={text:m.responseText};try{if(i==='html'||/text\/html/i.test(m.contentType)){c.html=m.responseText}else if(i==='json'||(i!=='text'&&/\/json/i.test(m.contentType))){try{c.json=$.parseJSON(m.responseText)}catch(e){b.code=500;b.message='parseerror'}}else if(i==='xml'||(i!=='text'&&/\/xml/i.test(m.contentType))){var d=new ActiveXObject('Microsoft.XMLDOM');d.async=false;try{d.loadXML(m.responseText)}catch(e){d=undefined}if(!d||!d.documentElement||d.getElementsByTagName('parsererror').length){b.code=500;b.message='parseerror';throw'Invalid XML: '+m.responseText;}c.xml=d}}catch(parseMessage){throw parseMessage;}finally{g(b.code,b.message,c,a)}};m.onprogress=function(){};m.onerror=function(){g(500,'error',{text:m.responseText})};if(k.data){h=($.type(k.data)==='string')?k.data:$.param(k.data)}m.open(j.type,j.url);m.send(h)},abort:function(){if(m){m.abort()}}}});return $}));
+
 // ---------------------------------------------------------------------------------------
 // Support Notebook
 
@@ -53,6 +65,11 @@ var SUPPORT_NOTEBOOK = function($) {
 		{
 			var f = document.location.hash.slice(1);
 			this.focusform(f)
+			$('.digest-toggle-all').show();
+		}
+		else
+		{
+			$('.digest-toggle-all').hide();
 		}
 	}
 	
@@ -89,13 +106,15 @@ var SUPPORT_NOTEBOOK = function($) {
 	
 	module.display = function()
 	{
-		var digest = my.steps.map(module.printline);
+		//var digest = my.steps.map(module.printline);
+		var digest = _.map(my.steps, module.printline);
 		$(my.display).empty().append(digest);
 	}
 	
 	module.compile = function()
 	{
-		var digest = my.steps.map(module.printline);
+		//var digest = my.steps.map(module.printline);
+		var digest = _.map(my.steps, module.printline);
 		return digest.join('');
 	}
 	
@@ -122,6 +141,28 @@ var SUPPORT_NOTEBOOK = function($) {
 		if (_.isArray(val)) val = val.join(' | ');
 		o = [key, ' = ', val].join('');
 		return o;
+	}
+	
+	module.get_subject = function()
+	{
+		var sj = my.steps[0].note + ' ' + my.steps[0].heading;
+		return sj;
+	}
+	
+	module.get_reply_to = function()
+	{
+		var f0 = my.steps[0].form;
+		var co = !_.isUndefined(f0.ContactEmail) 	? f0.ContactEmail 	: null;
+		var id = !_.isUndefined(f0.DMID) 			? f0.DMID 			: null;
+		var rt = co ? co : id;
+		return rt;
+	}
+	
+	module.get_cust_name = function()
+	{
+		var f0 = my.steps[0].form;
+		var cn = !_.isUndefined(f0.Name) ? f0.Name 	: '';
+		return cn;
 	}
 	
 	module.storesubmit = function(pair)
@@ -196,10 +237,10 @@ var SUPPORT_NOTEBOOK = function($) {
 		console.log('compile_branch_logic - ', logic);
 		if (typeof logic == 'undefined') return( function() { return null } );
 		
-		logic = logic.split(/\)\s*,\s*\(/).map(function(expression) { return expression.replace(/[()]/g, ''); });
+		logic = _.map(logic.split(/\)\s*,\s*\(/), function(expression) { return expression.replace(/[()]/g, ''); });
 		console.dir(logic);
 		
-		var test_functions = _.flatten(logic.map(module.compile_test_functions));
+		var test_functions = _.flatten(_.map(logic, module.compile_test_functions));
 		return module.dispatch(test_functions);
 	}
 	
@@ -219,7 +260,7 @@ var SUPPORT_NOTEBOOK = function($) {
 				if (bits[0].match(/'\s*and\s+/))
 				{
 					parts = bits[0].split(/'\s*and\s+/);
-					conds = parts.map(function(c) { return module.parse_condition_and_curry(c, dest); });
+					conds = _.map(parts, function(c) { return module.parse_condition_and_curry(c, dest); });
 					funcs = module.curry_test_function_every(conds, dest);
 				}
 				else
@@ -331,7 +372,7 @@ var SUPPORT_NOTEBOOK = function($) {
 		return function(target /*, args */)
 		{
 			var args = _.rest(arguments);
-			return _.some(functions_array.map(function(fun) { return fun.apply(fun, module.construct(target, args)); }));
+			return _.some(_.map(functions_array, function(fun) { return fun.apply(fun, module.construct(target, args)); }));
 		};
 	}
 	
@@ -341,7 +382,7 @@ var SUPPORT_NOTEBOOK = function($) {
 		return function(target /*, args */)
 		{
 			var args = _.rest(arguments);
-			return _.every(functions_array.map(function(fun) { return fun.apply(fun, module.construct(target, args)); }));
+			return _.every(_.map(functions_array, function(fun) { return fun.apply(fun, module.construct(target, args)); }));
 		};
 	}
 	
@@ -413,7 +454,8 @@ var BACK_BUTTON_BEHAVIOUR = function() {
 
 			var rx = /INPUT|SELECT|TEXTAREA/i;
 			// 8 == backspace
-			if (e.which == 8)
+   			var key = (window.event) ? event.keyCode : e.which;
+   			if (key == 8)
 			{ 
 				if (!rx.test(e.target.tagName) || e.target.disabled || e.target.readOnly)
 				{
@@ -468,7 +510,8 @@ var BACK_BUTTON_BEHAVIOUR = function() {
 var MAILNOTEBOOK = function($) {
 
 	var my = {
-		'messagediv': '#feedback'
+		'messagediv': '#support-notebook-message',
+		'sent': false
 	};
 	
 	var module = {};
@@ -478,23 +521,36 @@ var MAILNOTEBOOK = function($) {
 		$('.digest-email').click(module.go);
 	}
 
-	module.go = function()
+	module.go = function(e)
 	{
+		e.preventDefault();
+		$('.digest-email').css({background: '#BBB', borderColor: '#AAA', backgroundImage: 'none', boxShadow: 'none'});
+		var sj = SUPPORT_NOTEBOOK.get_subject();
+		var rt = SUPPORT_NOTEBOOK.get_reply_to();
+		var cn = SUPPORT_NOTEBOOK.get_cust_name();
 		var nb = SUPPORT_NOTEBOOK.compile();
-		console.log(nb);
-		$.ajax({
-			type: 'POST',
-			url: 'http://ush.dmclub.net/mail',
-			crossDomain: true,
-			data: {'notebook': nb},
-			dataType: 'text',
-			success: function(responseData, textStatus, jqXHR) {
-				$(my.messagediv).empty().html('<p>Thanks for emailing your notebook to support<br>They will be in touch shortly.</p>').show();
-			},
-			error: function (responseData, textStatus, errorThrown) {
-				alert('POST failed ' + textStatus + ' ' + errorThrown);
-			}
-		});
+		nb += '<p><br>Visitor using: ' + navigator.userAgent + '</p>';
+		if (!my.sent)
+		{
+			my.sent = true;
+			$.ajax({
+				type: 'POST',
+				url: 'http://ush.dmclub.net/mail',
+				crossDomain: true,
+				data: JSON.stringify({'subject': sj, 'reply_to': rt, 'cust_name': cn, 'notebook': nb}),
+				contentType: 'text/plain',
+				dataType: 'html',
+				success: function(responseData, textStatus, jqXHR) {
+					console.log('MAILNOTEBOOK POST succeeded - notebook mailed');
+					$(my.messagediv).removeClass('hidden');
+					$(document).scrollTop();
+				},
+				error: function (responseData, textStatus, errorThrown) {
+					console.log('MAILNOTEBOOK POST failed ' + textStatus + ' ' + errorThrown);
+					$(my.messagediv).addClass('nb-err').html('<h2>The email could not be sent</h2><p>Please check that your DMID (email address) or alternative contact email address is valid.</p>').removeClass('hidden');
+				}
+			});
+		}
 	}
 
 	return module;
