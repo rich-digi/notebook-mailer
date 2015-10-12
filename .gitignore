@@ -1,8 +1,10 @@
 .DS_Store
-.sass-cache/
+.sass-cache
 
 vendor
 composer.lock
 composer.phar
 
 bower_components
+
+logs/*

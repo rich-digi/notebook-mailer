@@ -551,7 +551,7 @@ var MAILNOTEBOOK = function($) {
 				}
 			});
 		}
-	}
+ 	}
 
 	return module;
 
