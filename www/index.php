@@ -72,6 +72,13 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.logfile' => __DIR__.'/../logs/development.log',
 ));
 
+// Logging
+// -------
+
+$app->register(new Silex\Provider\MonologServiceProvider(), array(
+    'monolog.logfile' => __DIR__.'/../logs/development.log',
+));
+
 // ---------------------------------------------------------------------------------------------------------------------
 // Routes
 // ---------------------------------------------------------------------------------------------------------------------

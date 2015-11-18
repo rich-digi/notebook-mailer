@@ -1,6 +1,6 @@
 # Unified Solutions Hub
 
-**A webapp that forms the center of the Unified Solutions system. At the moment all it does is allow Support Notebooks to be emailed to support, but its role will be expanded in future versions**
+**A webapp that forms the centre of the Unified Solutions system. At the moment all it does is allow Support Notebooks to be emailed to support, but its role will be expanded in future versions.**
 
 Two email addresses supported (one for successful problem resolutions, one for those who want more help).
 
@@ -20,4 +20,4 @@ Built-in test harness @ /mail uses Foundation 5
 
 See config/prod.yml
 
-This YAML file allows you to set the recipient emails addresses and acceptable access doamin for CORS.
+This YAML file allows you to set the recipient email addresses and acceptable access doamin for CORS.

@@ -657,7 +657,7 @@ var MAILNOTEBOOK = function($) {
 					$(my.messagediv).removeClass('hidden');
 					$(document).scrollTop();
 				},
-				error: function(responseData, textStatus, errorThrown) {
+				error: function (responseData, textStatus, errorThrown) {
 					console.log('MAILNOTEBOOK POST failed ' + textStatus + ' ' + errorThrown);
 					$(my.messagediv).addClass('nb-err').html('<h2>The email could not be sent</h2><p>Please check that your DMID (email address) or alternative contact email address is valid.</p>').removeClass('hidden');
 				}
