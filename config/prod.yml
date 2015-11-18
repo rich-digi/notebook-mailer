@@ -5,4 +5,7 @@
 email_on_success: "support@dmclub.net"
 email_on_failure: "support@dmclub.net"
 
-cors_allowed_origin: "http://notes.dmclub.net"
+cors_allowed_origins:
+  - "http://notes.dmclub.net"
+  - "http://notes.live.dmclub.net"
+  - "http://notes.prev1336.dmclub.net"

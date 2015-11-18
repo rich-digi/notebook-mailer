@@ -8,6 +8,9 @@
 //
 // ---------------------------------------------------------------------------------------------------------------------
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -53,11 +56,21 @@ $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
 // CORS Cross-Origin Resource Sharing
 // ----------------------------------
-$app->register(new JDesrosiers\Silex\Provider\CorsServiceProvider(), array(
-    'cors.allowOrigin' => $app['cors_allowed_origin'],
-));
-$app->after($app['cors']);
+$http_origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : NULL;
+if (in_array($http_origin, $app['cors_allowed_origins']))
+{  
+	$app->register(new JDesrosiers\Silex\Provider\CorsServiceProvider(), array(
+		'cors.allowOrigin' => $http_origin
+	));
+	$app->after($app['cors']);
+}
 
+// Logging
+// -------
+
+$app->register(new Silex\Provider\MonologServiceProvider(), array(
+    'monolog.logfile' => __DIR__.'/../logs/development.log',
+));
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Routes
@@ -104,6 +117,10 @@ $app->post('/mail', function() use ($app) {
         ->addPart($html, 'text/html');
 	
 	$app['mailer']->send($message);
+
+	// Log the message
+	// $app['monolog']->addDebug('Message sent by '.$repl);
+
 	return $app['twig']->render('mail.twig', array('sent' => true));
 });
 

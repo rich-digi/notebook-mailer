@@ -6,6 +6,7 @@
         "swiftmailer/swiftmailer": "~5.4",
         "jdesrosiers/silex-cors-provider": "~0.1",
         "igorw/config-service-provider": "*",
-        "symfony/yaml": "~2.1"
+        "symfony/yaml": "~2.1",
+        "monolog/monolog": "^1.17"
     }
 }
