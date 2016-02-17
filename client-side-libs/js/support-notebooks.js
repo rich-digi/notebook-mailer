@@ -176,6 +176,7 @@ var SUPPORT_NOTEBOOK = function($) {
 		if ($('form.record').length > 0)
 		{
 			var f = document.location.hash.slice(1);
+			if (f == 'A') module.clear(); // Start a new notebook
 			this.focusform(f)
 			$('.digest-toggle-all').show();
 		}
