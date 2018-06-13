@@ -16,11 +16,17 @@
 	<label>DMID
 		<input name="DMID" type="text" placeholder="Should be a valid email address">
 	</label>
-	<label>Notebook content
+	<label>Notebook content (should be JSON)
 		<textarea name="notebook"></textarea>
 	</label>
 	<input type="submit" class="button" value="Test">
 </div>
 </form>
+
+<div class="large-12 columns">
+	<h4>Example Notebook Content</h4>
+	<p style="word-wrap: break-word;">{"subject":"#1299 I've got a problem not covered here","reply_to":"test@apewave.com","cust_name":"Tom Testeroni","notebook":"&lt;p&gt;&lt;a class=\"step\" href=\"/1299\"&gt;#1299-A I've got a problem not covered here&lt;/a&gt;&lt;span class=\"timestamp\"&gt;Wed, 13 Jun 2018 17:10:05 GMT&lt;/span&gt;Name = Tom Testeroni&lt;br&gt;DMID = rich@apewave.com&lt;br&gt;ContactEmail = test@apewave.com&lt;br&gt;TimeProblemOccurred = 18.11&lt;span class=\"choice\"&gt;Continue&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;a class=\"step\" href=\"/1299#CONTACT\"&gt;#1299-CONTACT Additional details&lt;/a&gt;&lt;span class=\"timestamp\"&gt;Wed, 13 Jun 2018 17:10:18 GMT&lt;/span&gt;WhatWereYouTryingToDo = Testing Express Support API&lt;br&gt;WhatHappened = We'll see...&lt;br&gt;ErrorMessage = &lt;br&gt;URL = &lt;br&gt;OperatingSystem =  | &lt;br&gt;OtherOS = &lt;br&gt;OtherBrowser = &lt;br&gt;BrowserVersion = &lt;span class=\"choice\"&gt;Continue&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;Visitor using: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36&lt;/p&gt;"}</p>
+</div>
+
 
 {% endblock %}

@@ -72,13 +72,6 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
     'monolog.logfile' => __DIR__.'/../logs/development.log',
 ));
 
-// Logging
-// -------
-
-$app->register(new Silex\Provider\MonologServiceProvider(), array(
-    'monolog.logfile' => __DIR__.'/../logs/development.log',
-));
-
 // ---------------------------------------------------------------------------------------------------------------------
 // Routes
 // ---------------------------------------------------------------------------------------------------------------------
@@ -94,6 +87,9 @@ $app->get('/mail', function() use ($app) {
 $app->post('/mail', function() use ($app) {
 	$request = $app['request'];
     $data = json_decode($request->getContent(), true);
+    if (!$data) {
+        $data = json_decode($request->request->get('notebook'), true); // Test harness
+    }
 
 	$subject 	= $data['subject'];
 	$reply_to 	= $data['reply_to'];
@@ -122,7 +118,7 @@ $app->post('/mail', function() use ($app) {
 		->setReplyTo($repl)
 		->setBody($text, 'text/plain')
         ->addPart($html, 'text/html');
-	
+        	
 	$app['mailer']->send($message);
 
 	// Log the message
